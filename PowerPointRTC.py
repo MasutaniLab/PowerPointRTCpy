@@ -14,6 +14,8 @@ import datetime
 import msvcrt
 
 
+
+
 import optparse
 import sys,os,platform
 import re
@@ -32,6 +34,8 @@ from OpenRTM_aist import RTObject
 from OpenRTM_aist import CorbaConsumer
 from omniORB import CORBA
 import CosNaming
+
+import ctypes
 
 from ImpressControl import *
 
@@ -183,6 +187,10 @@ class PowerPointControl(ImpressControl):
     self.m_powerpoint.run()
     self.m_powerpoint.gotoSlide(self.SlideFileInitialNumber[0])
     self.slidenum = self.SlideFileInitialNumber[0]
+    #print self.m_powerpoint.ptPresentation.Slides(1).CustomLayout.Height
+    #print self.m_powerpoint.ptPresentation.Slides(1).CustomLayout.Width
+    #print self.m_powerpoint.ptSlideShowWindow.Height
+    #print self.m_powerpoint.ptSlideShowWindow.Width
     
     return RTC.RTC_OK
 
@@ -213,7 +221,7 @@ class PowerPointControl(ImpressControl):
   # @return RTC::ReturnCode_t
   
   def on_shutdown(self, ec_id):
-      ImpressControl.onExecute(self, ec_id)
+      ImpressControl.on_shutdown(self, ec_id)
       return RTC.RTC_OK
 
 
@@ -336,8 +344,12 @@ class PowerPointObject:
     # @param ey 
     #
     def drawLine(self, bx, by, ex, ey):
+      tmp = float(self.ptPresentation.Slides(1).CustomLayout.Height)/float(ctypes.windll.user32.GetSystemMetrics(1))
       
-      self.ptSlideShowView.DrawLine(bx, by, ex, ey)
+      #print self.ptPresentation.Slides(1).CustomLayout.Height
+      #print self.ptPresentation.Slides(1).CustomLayout.Width
+      
+      self.ptSlideShowView.DrawLine(bx*tmp, by*tmp, ex*tmp, ey*tmp)
 
     ##
     # @brief 
@@ -365,7 +377,7 @@ class PowerPointObject:
           self.ptApplication = win32com.client.Dispatch ( pythoncom.CoGetInterfaceAndReleaseStream (self.thread_ptApplication, pythoncom.IID_IDispatch))
           self.ptPresentations = win32com.client.Dispatch ( pythoncom.CoGetInterfaceAndReleaseStream (self.thread_ptPresentations, pythoncom.IID_IDispatch))
           self.ptPresentation = win32com.client.Dispatch ( pythoncom.CoGetInterfaceAndReleaseStream (self.thread_ptPresentation, pythoncom.IID_IDispatch))
-
+          
     ##
     # @brief 
     # @param self 
