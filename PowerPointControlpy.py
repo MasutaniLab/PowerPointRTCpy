@@ -2,8 +2,8 @@
 # -*- encoding: cp932 -*-
 
 ##
-#   @file PowerPointRTC.py
-#   @brief PortPointControl Component
+#   @file PowerPointControlpy.py
+#   @brief PowerPointControlpy Component
 
 
 
@@ -31,12 +31,12 @@ from ImpressControl import *
 from PowerPointObject import *
 
 
-powerpointcontrol_spec = ["implementation_id", "PowerPointControl",
-                  "type_name",         "PowerPointControl",
+powerpointcontrolpy_spec = ["implementation_id", "PowerPointControlpy",
+                  "type_name",         "PowerPointControlpy",
                   "description",       "PowerPoint Component",
                   "version",           "0.1",
                   "vendor",            "Miyamoto Nobuhiko",
-                  "category",          "example",
+                  "category",          "Office",
                   "activity_type",     "DataFlowComponent",
                   "max_instance",      "10",
                   "language",          "Python",
@@ -58,11 +58,11 @@ powerpointcontrol_spec = ["implementation_id", "PowerPointControl",
 
 
 ##
-# @class PowerPointControl
+# @class PowerPointControlpy
 # @brief PowerPointを操作するためのRTCのクラス
 #
 
-class PowerPointControl(ImpressControl):
+class PowerPointControlpy(ImpressControl):
     ##
     # @brief コンストラクタ
     # @param self 
@@ -71,7 +71,7 @@ class PowerPointControl(ImpressControl):
   def __init__(self, manager):
     ImpressControl.__init__(self, manager)
     
-    prop = OpenRTM_aist.Manager.instance().getConfig()
+    """prop = OpenRTM_aist.Manager.instance().getConfig()
     fn = self.getProperty(prop, "powerpoint.filename", "")
     self.m_powerpoint = PowerPointObject()
     
@@ -79,7 +79,7 @@ class PowerPointControl(ImpressControl):
       str1 = [fn]
       OpenRTM_aist.replaceString(str1,"/","\\")
       fn = os.path.abspath(str1[0])
-    self.m_powerpoint.Open(fn)
+    self.m_powerpoint.Open(fn)"""
 
     self.conf_filename = ["NewFile"]
 
@@ -120,6 +120,26 @@ class PowerPointControl(ImpressControl):
         self.m_powerpoint.Open(tfn)"""
         #self.m_powerpoint.closeCom()
 
+  def onInitialize(self):
+    ImpressControl.onInitialize(self)
+    self.bindParameter("file_path", self.conf_filename, "NewFile")
+    
+    self._configsets.update("default","file_path")
+    self.m_powerpoint = PowerPointObject()
+    fn = self.conf_filename[0]
+    
+    if fn == "NewFile":
+        fn = ""
+
+    if fn != "":
+      str1 = [fn]
+      OpenRTM_aist.replaceString(str1,"/","\\")
+      fn = os.path.abspath(str1[0])
+    
+    self.m_powerpoint.Open(fn)
+    
+    
+    return RTC.RTC_OK
 
   ##
   # @brief 線描画
@@ -225,11 +245,11 @@ class PowerPointControl(ImpressControl):
 # @brief
 # @param manager マネージャーオブジェクト
 def MyModuleInit(manager):
-    profile = OpenRTM_aist.Properties(defaults_str=powerpointcontrol_spec)
+    profile = OpenRTM_aist.Properties(defaults_str=powerpointcontrolpy_spec)
     manager.registerFactory(profile,
-                            PowerPointControl,
+                            PowerPointControlpy,
                             OpenRTM_aist.Delete)
-    comp = manager.createComponent("PowerPointControl")
+    comp = manager.createComponent("PowerPointControlpy")
 
 def main():
     """po = PowerPointObject()
