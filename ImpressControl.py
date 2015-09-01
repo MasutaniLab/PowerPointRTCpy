@@ -4,6 +4,7 @@
 ##
 #
 # @file ImpressControl.py
+# @brief プレゼンテーションソフトを操作するクラス、関数
 
 import optparse
 import sys,os,platform

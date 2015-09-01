@@ -3,7 +3,7 @@
 
 ##
 #   @file PowerPointRTC.py
-#   @brief PortPointControl Component
+# @brief PowerPoint‚ğ‘€ì‚·‚é‚½‚ß‚ÌƒNƒ‰ƒXAŠÖ”
 
 import win32com
 import pythoncom
