@@ -11,7 +11,7 @@ import sys,os,platform
 import re
 import time
 import random
-import commands
+#import commands
 import math
 
 
